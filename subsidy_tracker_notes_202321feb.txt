@@ -1,0 +1,113 @@
+The three associated files contain data from Subsidy Tracker, 
+prepared by Good Jobs First.
+
+This data set was made Feb 20, 2023, and contains two data files:
+there are 709,050 subsidy records in the "basic" file and
+2,899 parent records in the "parent" file.  The parent file
+is a summation of data from the basic file together with 
+additional information about each parent company.
+This dataset is "3.27" in Good Jobs First's internal naming scheme.
+
+Data fields are as follows:
+
+"basic" file:
+state char(2) 
+program varchar(150)
+subsidy_type varchar(100)
+agency varchar(150)
+sub_year varchar(20)
+company varchar(150)
+city varchar(100)
+county varchar(100)
+street_address varchar(150)
+zip varchar(15)
+major_industry varchar(150)
+industry varchar(150)
+description text
+naics varchar(100)
+jobs_data varchar(150)
+wage_data varchar(150)
+wage_data_type varchar(150)
+investment_data varchar(150)
+info_source text
+notes text
+subsidy bigint(20)
+subsidy_adjusted bigint(20)
+megadeal_contrib bigint(20)
+subsidy_display varchar(30)
+parent_name varchar(150)
+unique_id bigint(20)
+load_day varchar(8)
+subsidy_level varchar(10)
+cfda_program_num varchar(20)
+face_loan bigint(20)
+principal_place_state_code varchar(20)
+principal_place_code varchar(20)
+principal_place_cc varchar(100)
+principal_place_zip varchar(11)
+unique_transaction_id varchar(50)
+duns varchar(20)
+last_mod_date varchar(20)
+
+The "subsidy" data field contains the subsidy amount in dollars associated
+with the record.  Some records are Megadeals; these records may combine
+subsidy amounts from other records.  The medadeal_contrib data field gives
+the subsidy amount contribution from the megadeal record that is not 
+duplicated by other records.  The subsidy_adjusted data field holds the
+subsidy amount for non-megadeal records or the megadeal_contrib amount 
+for megadeal records; subsidy_adjusted is the data field that you should
+use if you want to add amounts from different records together in order
+to avoid double counting amounts. face_loan holds the face value in dollars
+of loans and bailout amount (not including repayments) for Federal 
+loan records.  A single record will have either a subsidy amount or 
+a face_loan amount but not both.
+
+Some records have parent company names assigned by Good Jobs First.  
+These records also have a major_industry, which is the industry of the 
+parent company, as well as an "industry" which is the more detailed
+industrial classification of the parent company.
+
+The unique_id data field identifies each data record.  load_day identifies
+the day on which the record was added to the database (early records
+have a nominal day). 
+
+Data fields from cfda_program_num down are populated for Federal 
+records only, and the unique_transaction_id and last_mod_date apply 
+to the Federal data system from which the data were taken, not to
+Subsidy Tracker.
+
+"parent" file:
+parent_name varchar(150)
+sub_total decimal(30,0)
+face_total decimal(30,0)
+num_recs int(11)
+rank integer
+earliest_year smallint
+most_data_since_year smallint
+parent_group
+ownership: type of ownership of parent
+curr_ticker: stock ticker
+curr_cik
+curr_ISIN
+hq_country: country that parent HQ is located in
+hq_state: U.S. state that parent HQ is located in.
+industry
+major_industry
+rapsheet_url: URL on Corporate Rap Sheet site
+fcmd_url: URL on POGO's FCMD site
+vt_url: URL on GJF's Violation Tracker site
+st_url: URL on GJF's Subsidy Tracker site
+
+The parent file holds parent company totals for those individual subsidy
+records that have assigned parents.  parent_name should match
+the parent_name within the basic file.  sub_total is the total subsidy amount
+for the parent company and num_recs is the number of subsidy records.
+"Rank" is the ranking of the parent in descending order by total subsidy 
+amount.  The earliest_year shows the earliest subsidy year for any state 
+or local subsidy assigned to the parent, while most_data_since_year shows 
+the year after which the majority of the state or local data records 
+assigned to the parent had their subsidy years.  Federal records for all 
+parents were taken from FY2000 and later years.
+
+face_total shows the totals face value of loans and bailouts (not
+including repayments) for the parent company.

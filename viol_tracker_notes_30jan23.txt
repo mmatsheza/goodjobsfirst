@@ -1,0 +1,124 @@
+The three associated files contain data from Violation Tracker, 
+prepared by Good Jobs First.
+
+This data set was made Jan 30, 2023, and contains three data files:
+there are 546,732 records in the "basic" file; 3,290 parent records 
+in the "current_parents" file; and 2,940 parent records in the 
+"reporting_date_parents" file. 
+
+The two parent files are summations of data from the basic file, 
+together with additional information about the parent companies.
+
+This dataset is "1.51" in Good Jobs First's internal naming scheme.
+
+The dataset now includes two different parent name fields that
+have been assigned by Good Jobs First:
+
+1. The current parent name is the ultimate parent company that
+owns the entity responsible for the violation at the time that
+this dataset was published by Good Jobs First.  This was 
+previously referred to as simply the parent name.
+
+2. The reporting_date_parent, or parent at the time of the penalty,
+is the ultimate parent company that owned the entity responsible
+for the violation at the time of the penalty announcement.  This
+is not necessarily the same as the ultimate parent company at the
+time that the misconduct occurred.  The date on which the misconduct
+occurred is usually not available.
+
+Data fields are as follows:
+
+In the "basic" file:
+
+agency varchar(150) [name of agency imposing the penalty: different records with the same agency may come from different sources as explained by the info_source field] 
+agency_code varchar(20) [code assigned by Violation Tracker to each agency]
+pen_year varchar(4) [year in which the penalty was announced]
+company varchar(150) [name of company penalized as it appeared in source document]
+city varchar(100) [city in which the penalized facility is located; not always available]
+county varchar(100) [county in which the penalized facility is located; the limited number of records containing this information are mainly cases brought by county district attorneys]
+street_address varchar(150) [street address of penalized facility; not always available]
+state char(2) [state in which the penalized facility is located; not always available]
+zip varchar(15) [zip code of penalized facility; not always available]
+description text [details about violation and penalty drawn from the source document]
+naics varchar(100) [NAICS industry code for the penalized facility; often not available]
+info_source text [source document used to create the record]
+notes text 
+unique_id bigint(20) [ID assigned to the record by Violation Tracker]
+current_parent_name varchar(150) [parent company of penalized company, as determined by Violation Tracker: see above]
+curr_ISIN varchar(150) a 12-digit alphanumeric code that uniquely identifies a specific security (for the current parent)
+curr_cik: CIK code assigned by the SEC to parents whose shares are traded in the U.S. (for the current parent)
+load_day varchar(9) [date of upload in which the entry was first added]
+penalty bigint(20) [dollar amount of penalty: if records contained both initial and revised or current amounts, only the latter were used.  In some EPA records the penalty amount includes the 
+dollar value of Supplementary Environmental Projects]
+sub_penalty bigint(20) [penalty amount subtracted from parent company total to account for overlapping entries]
+penalty_adjusted bigint(20) [amount of penalty contributing to the parent company total]
+orig_id varchar(30) [case number displayed in source document; not always available]
+civil_criminal varchar(150) [indication of whether the case is civil, criminal or a combination of the two]
+npa_dpa varchar(150) [indication of whether a criminal case was resolved by the non-prosecution agreement or a deferred prosecution agreement]
+offense_group varchar(150) [offense grouping based on primary offense assigned by Violation Tracker]
+primary_offense varchar(150) [primary offense category assigned by Violation Tracker]
+secondary_offense varchar(150) [secondary offense category assigned by Violation Tracker]
+naics_tr varchar(150) [NAICS industry code details]
+case_id varchar(100) [private litigation docket number]
+facility_name varchar(150) [facility name displayed in some EPA, OSHA or MSHA source documents]
+penalty_date date [date penalty was announced]
+govt_level varchar(150) [level of government in which the agency imposing the penalty is located--federal, state or local]
+case_category varchar(150) [indication of whether the record is an agency action or private litigation] 
+court varchar(150) [name of court in which a private litigation case was brought]
+litigation_case_title varchar(150) [docket name of private litigation cases]
+lawsuit_resolution varchar(150) [indication of whether a private litigation case ended in a verdict or a settlement]
+pacer_link varchar(150) [link to the PACER federal court database docket for private litigation cases]
+reporting_date_parent varchar(150) [the parent at the time of the penalty: see above]
+hist_ISIN varchar(150) a 12-digit alphanumeric code that uniquely identifies a specific security (for the reporting date parent)
+hist_cik: CIK code assigned by the SEC to parents whose shares are traded in the U.S. (for the reporting date parent)
+history_recap text [a description of how parent ownership changed from the reporting_date_parent to the current_parent_name]
+echo_case_url: if the record comes from EPA's ECHO database, a link to the record on EPA's site
+
+Basic records are taken from different governmental agencies,
+so each record may contain data for a different kind of entity
+depending on its source.  Records from EPA's ECHO are individual cases,
+records from OSHA are individual inspections, records
+from MSHA are individual violations, and other kinds of records
+may be individual settlements or court cases.  Some records will include 
+penalties that correspond to more than one violation.
+
+Only those records with $5,000 or more in final penalties and that occured since 2000 are included.
+
+Some records contain penalties that overlap with other records.  For 
+instance, a DOJ case record may duplicate a regulatory agency record. 
+This would lead to double or multiple counting of penalties if they 
+were all added up.  To reduce this, Good Jobs First created a 
+"sub_penalty" field that subtracts from penalty amounts for all but 
+one record in a set of record with duplicate penalties.  The penalty 
+amount minus the sub_penalty amount is listed
+as penalty_adjusted.  Adding up penalty_adjusted should reduce the 
+duplicate penalty problem, although Good Jobs First has only assigned
+sub_penalty amounts to records with assigned parent companies.
+
+"current_parents" file (pen_total and num_recs are bigints, all others will fit in varchar(150):
+
+current_parent_name
+pen_total: penalty total from all records associated with the parent, adjusted as above
+num_recs: number of records associated with the parent
+rank: penalty total rank in descending order among Violation Tracker parents
+ownership: type of ownership of parent
+curr_ticker: stock ticker, used only for parents whose shares are traded in the U.S.
+curr_cik: CIK code assigned by the SEC to parents whose shares are traded in the U.S.
+curr_ISIN: a 12-digit alphanumeric code that uniquely identifies a specific security 
+hq_country: country in which a parent's headquarters is located
+hq_state: state in which a U.S.-based parent has its headquarters
+industry: specific industry of parent company as assigned by Violation Tracker
+major_industry: broad industry group of parent company as assigned by Violation Tracker
+viol_parent_url: URL of parent summary page on Violation Tracker site
+sub_parent_url: URL of parent company summary page on Subsidy Tracker site
+csw_link: URL of parent company summary page on Covid Stimulus Watch site
+
+"reporting_date_public_parents" file (contains only publicly traded parents)
+
+reporting_date_parent
+hist_ticker:stock ticker, used only for parents whose shares are traded or previously traded in the U.S.
+hist_cik:CIK code assigned by the SEC to parents whose shares are traded or previously traded in the U.S.
+hist_ISIN: a 12-digit alphanumeric code that uniquely identifies a specific security 
+
+For more information see the Violation Tracker User Guide at 
+https://www.goodjobsfirst.org/violation-tracker-user-guide
